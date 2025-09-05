@@ -14,16 +14,350 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      clientes: {
+        Row: {
+          created_at: string
+          direccion: string | null
+          dpi: string | null
+          id: string
+          telefono: string | null
+          updated_at: string
+          usuario_id: string
+        }
+        Insert: {
+          created_at?: string
+          direccion?: string | null
+          dpi?: string | null
+          id?: string
+          telefono?: string | null
+          updated_at?: string
+          usuario_id: string
+        }
+        Update: {
+          created_at?: string
+          direccion?: string | null
+          dpi?: string | null
+          id?: string
+          telefono?: string | null
+          updated_at?: string
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clientes_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comercios: {
+        Row: {
+          banco_comercio_id: number | null
+          created_at: string
+          cuenta_numero: string | null
+          id: string
+          nombre: string
+          updated_at: string
+        }
+        Insert: {
+          banco_comercio_id?: number | null
+          created_at?: string
+          cuenta_numero?: string | null
+          id?: string
+          nombre: string
+          updated_at?: string
+        }
+        Update: {
+          banco_comercio_id?: number | null
+          created_at?: string
+          cuenta_numero?: string | null
+          id?: string
+          nombre?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      orden_items: {
+        Row: {
+          cantidad: number
+          created_at: string
+          id: string
+          orden_id: string
+          precio_unitario: number
+          producto_id: string
+          subtotal: number
+          updated_at: string
+        }
+        Insert: {
+          cantidad: number
+          created_at?: string
+          id?: string
+          orden_id: string
+          precio_unitario: number
+          producto_id: string
+          subtotal: number
+          updated_at?: string
+        }
+        Update: {
+          cantidad?: number
+          created_at?: string
+          id?: string
+          orden_id?: string
+          precio_unitario?: number
+          producto_id?: string
+          subtotal?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orden_items_orden_id_fkey"
+            columns: ["orden_id"]
+            isOneToOne: false
+            referencedRelation: "ordenes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orden_items_producto_id_fkey"
+            columns: ["producto_id"]
+            isOneToOne: false
+            referencedRelation: "productos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ordenes: {
+        Row: {
+          created_at: string
+          direccion_envio: string
+          estado: Database["public"]["Enums"]["estado_orden"]
+          fecha_creacion: string
+          id: string
+          telefono: string
+          total: number
+          updated_at: string
+          usuario_id: string
+        }
+        Insert: {
+          created_at?: string
+          direccion_envio: string
+          estado?: Database["public"]["Enums"]["estado_orden"]
+          fecha_creacion?: string
+          id?: string
+          telefono: string
+          total?: number
+          updated_at?: string
+          usuario_id: string
+        }
+        Update: {
+          created_at?: string
+          direccion_envio?: string
+          estado?: Database["public"]["Enums"]["estado_orden"]
+          fecha_creacion?: string
+          id?: string
+          telefono?: string
+          total?: number
+          updated_at?: string
+          usuario_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ordenes_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pagos: {
+        Row: {
+          banco_pago_id: string | null
+          comercio_id: string
+          created_at: string
+          estado: Database["public"]["Enums"]["estado_pago"]
+          id: string
+          idempotency_key: string
+          monto: number
+          orden_id: string
+          referencia: string | null
+          updated_at: string
+        }
+        Insert: {
+          banco_pago_id?: string | null
+          comercio_id: string
+          created_at?: string
+          estado?: Database["public"]["Enums"]["estado_pago"]
+          id?: string
+          idempotency_key: string
+          monto: number
+          orden_id: string
+          referencia?: string | null
+          updated_at?: string
+        }
+        Update: {
+          banco_pago_id?: string | null
+          comercio_id?: string
+          created_at?: string
+          estado?: Database["public"]["Enums"]["estado_pago"]
+          id?: string
+          idempotency_key?: string
+          monto?: number
+          orden_id?: string
+          referencia?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pagos_comercio_id_fkey"
+            columns: ["comercio_id"]
+            isOneToOne: false
+            referencedRelation: "comercios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pagos_orden_id_fkey"
+            columns: ["orden_id"]
+            isOneToOne: false
+            referencedRelation: "ordenes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pagos_webhook_logs: {
+        Row: {
+          created_at: string
+          headers: Json | null
+          id: string
+          pago_id: string | null
+          payload: Json
+          recibido_en: string
+        }
+        Insert: {
+          created_at?: string
+          headers?: Json | null
+          id?: string
+          pago_id?: string | null
+          payload: Json
+          recibido_en?: string
+        }
+        Update: {
+          created_at?: string
+          headers?: Json | null
+          id?: string
+          pago_id?: string | null
+          payload?: Json
+          recibido_en?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pagos_webhook_logs_pago_id_fkey"
+            columns: ["pago_id"]
+            isOneToOne: false
+            referencedRelation: "pagos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      productos: {
+        Row: {
+          codigo: string
+          created_at: string
+          descripcion: string | null
+          estado: string
+          fecha_creacion: string
+          foto_url: string | null
+          id: string
+          marca: string
+          nombre: string
+          precio: number
+          stock: number
+          updated_at: string
+        }
+        Insert: {
+          codigo: string
+          created_at?: string
+          descripcion?: string | null
+          estado?: string
+          fecha_creacion?: string
+          foto_url?: string | null
+          id?: string
+          marca: string
+          nombre: string
+          precio: number
+          stock?: number
+          updated_at?: string
+        }
+        Update: {
+          codigo?: string
+          created_at?: string
+          descripcion?: string | null
+          estado?: string
+          fecha_creacion?: string
+          foto_url?: string | null
+          id?: string
+          marca?: string
+          nombre?: string
+          precio?: number
+          stock?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      usuarios: {
+        Row: {
+          correo_electronico: string
+          fecha_creacion: string
+          id: string
+          nombre_completo: string
+          password_hash: string | null
+          rol: Database["public"]["Enums"]["app_role"]
+          telefono: string | null
+        }
+        Insert: {
+          correo_electronico: string
+          fecha_creacion?: string
+          id?: string
+          nombre_completo: string
+          password_hash?: string | null
+          rol?: Database["public"]["Enums"]["app_role"]
+          telefono?: string | null
+        }
+        Update: {
+          correo_electronico?: string
+          fecha_creacion?: string
+          id?: string
+          nombre_completo?: string
+          password_hash?: string | null
+          rol?: Database["public"]["Enums"]["app_role"]
+          telefono?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      confirmar_orden_y_restar_stock: {
+        Args: { p_pago_id: string }
+        Returns: boolean
+      }
+      revertir_stock_orden: {
+        Args: { p_orden_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "cliente" | "operador"
+      estado_orden:
+        | "PENDING"
+        | "CONFIRMED"
+        | "SHIPPED"
+        | "DELIVERED"
+        | "CANCELLED"
+      estado_pago: "PENDING" | "APROBADO" | "RECHAZADO" | "REFUNDED"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +484,16 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["cliente", "operador"],
+      estado_orden: [
+        "PENDING",
+        "CONFIRMED",
+        "SHIPPED",
+        "DELIVERED",
+        "CANCELLED",
+      ],
+      estado_pago: ["PENDING", "APROBADO", "RECHAZADO", "REFUNDED"],
+    },
   },
 } as const
