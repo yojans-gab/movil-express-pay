@@ -47,7 +47,7 @@ export type Database = {
             foreignKeyName: "clientes_usuario_id_fkey"
             columns: ["usuario_id"]
             isOneToOne: false
-            referencedRelation: "usuarios"
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -166,7 +166,7 @@ export type Database = {
             foreignKeyName: "ordenes_usuario_id_fkey"
             columns: ["usuario_id"]
             isOneToOne: false
-            referencedRelation: "usuarios"
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -301,6 +301,36 @@ export type Database = {
           nombre?: string
           precio?: number
           stock?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          correo_electronico: string
+          created_at: string
+          id: string
+          nombre_completo: string
+          rol: Database["public"]["Enums"]["app_role"]
+          telefono: string | null
+          updated_at: string
+        }
+        Insert: {
+          correo_electronico: string
+          created_at?: string
+          id: string
+          nombre_completo: string
+          rol?: Database["public"]["Enums"]["app_role"]
+          telefono?: string | null
+          updated_at?: string
+        }
+        Update: {
+          correo_electronico?: string
+          created_at?: string
+          id?: string
+          nombre_completo?: string
+          rol?: Database["public"]["Enums"]["app_role"]
+          telefono?: string | null
           updated_at?: string
         }
         Relationships: []
