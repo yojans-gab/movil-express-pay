@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, Smartphone } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
@@ -33,6 +34,7 @@ const Auth = () => {
     password: '',
     confirmPassword: '',
     nombre_completo: '',
+    rol: 'cliente' as 'cliente' | 'operador',
   });
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -90,7 +92,7 @@ const Auth = () => {
       return;
     }
 
-    const { error } = await signUp(signupForm.email, signupForm.password, signupForm.nombre_completo);
+    const { error } = await signUp(signupForm.email, signupForm.password, signupForm.nombre_completo, signupForm.rol);
 
     if (error) {
       if (error.message.includes('User already registered')) {
@@ -234,6 +236,23 @@ const Auth = () => {
                       }
                       required
                     />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-rol">Tipo de Usuario</Label>
+                    <Select 
+                      value={signupForm.rol} 
+                      onValueChange={(value: 'cliente' | 'operador') => 
+                        setSignupForm({ ...signupForm, rol: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona el tipo de usuario" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="cliente">Cliente</SelectItem>
+                        <SelectItem value="operador">Operador</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <Button type="submit" className="w-full" disabled={loading}>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
