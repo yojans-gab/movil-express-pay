@@ -92,7 +92,7 @@ const Index = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {/* Products Card */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/catalogo')}>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Smartphone className="h-5 w-5" />
@@ -103,14 +103,14 @@ const Index = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button className="w-full">
+              <Button className="w-full" onClick={(e) => { e.stopPropagation(); navigate('/catalogo'); }}>
                 Ver Productos
               </Button>
             </CardContent>
           </Card>
 
           {/* Shopping Cart */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/carrito')}>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <ShoppingCart className="h-5 w-5" />
@@ -121,14 +121,14 @@ const Index = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full" onClick={(e) => { e.stopPropagation(); navigate('/carrito'); }}>
                 Ver Carrito
               </Button>
             </CardContent>
           </Card>
 
           {/* Profile */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/perfil')}>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <User className="h-5 w-5" />
@@ -139,7 +139,7 @@ const Index = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button variant="outline" className="w-full">
+              <Button variant="outline" className="w-full" onClick={(e) => { e.stopPropagation(); navigate('/perfil'); }}>
                 Ver Perfil
               </Button>
             </CardContent>

@@ -374,6 +374,10 @@ export type Database = {
         Args: { p_pago_id: string }
         Returns: boolean
       }
+      is_operador: {
+        Args: { user_id: string }
+        Returns: boolean
+      }
       revertir_stock_orden: {
         Args: { p_orden_id: string }
         Returns: boolean
