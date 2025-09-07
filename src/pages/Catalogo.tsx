@@ -67,6 +67,37 @@ const Catalogo = () => {
     }).format(price);
   };
 
+  const addToCart = (producto: Producto) => {
+    try {
+      const savedCart = localStorage.getItem(`cart_${user?.id}`) || '[]';
+      const cartItems = JSON.parse(savedCart);
+      
+      const existingItemIndex = cartItems.findIndex((item: any) => item.producto.id === producto.id);
+      
+      if (existingItemIndex >= 0) {
+        // Si ya existe, incrementar cantidad
+        cartItems[existingItemIndex].cantidad += 1;
+      } else {
+        // Si no existe, agregar nuevo item
+        cartItems.push({ producto, cantidad: 1 });
+      }
+      
+      localStorage.setItem(`cart_${user?.id}`, JSON.stringify(cartItems));
+      
+      toast({
+        title: "Producto agregado",
+        description: `${producto.nombre} se agregó al carrito`,
+      });
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo agregar el producto al carrito",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (loading || loadingProductos) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
@@ -144,12 +175,7 @@ const Catalogo = () => {
                     <Button 
                       className="w-full" 
                       disabled={producto.stock === 0}
-                      onClick={() => {
-                        toast({
-                          title: "Funcionalidad próximamente",
-                          description: "El carrito de compras estará disponible pronto",
-                        });
-                      }}
+                      onClick={() => addToCart(producto)}
                     >
                       <ShoppingCart className="h-4 w-4 mr-2" />
                       {producto.stock > 0 ? 'Agregar al Carrito' : 'Agotado'}

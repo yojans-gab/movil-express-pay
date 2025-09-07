@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -20,10 +20,18 @@ const Perfil = () => {
   });
   const [saving, setSaving] = useState(false);
 
-  if (!user || !profile) {
-    navigate('/auth');
-    return null;
-  }
+  useEffect(() => {
+    if (!user) {
+      navigate('/auth');
+      return;
+    }
+    if (profile) {
+      setFormData({
+        nombre_completo: profile.nombre_completo || '',
+        telefono: profile.telefono || '',
+      });
+    }
+  }, [user, profile, navigate]);
 
   const handleSave = async () => {
     setSaving(true);
