@@ -10,12 +10,29 @@ const Index = () => {
   const { user, profile, signOut, loading } = useAuth();
   const navigate = useNavigate();
 
+  // If not logged in, redirect to auth
+  if (!loading && !user) {
+    navigate('/auth');
+    return null;
+  }
+
   const handleSignOut = async () => {
     await signOut();
     navigate('/auth');
   };
 
-  // ProtectedRoute already handles loading and auth checks
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="animate-pulse">
+            <Smartphone className="h-12 w-12 mx-auto mb-4 text-primary" />
+          </div>
+          <p className="text-muted-foreground">Cargando...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-secondary/10">
