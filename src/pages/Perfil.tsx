@@ -15,8 +15,8 @@ const Perfil = () => {
   const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({
-    nombre_completo: profile?.nombre_completo || '',
-    telefono: profile?.telefono || '',
+    nombre_completo: '',
+    telefono: '',
   });
   const [saving, setSaving] = useState(false);
 
@@ -32,6 +32,18 @@ const Perfil = () => {
       });
     }
   }, [user, profile, navigate]);
+
+  // Show loading state if user is not loaded or profile is still loading
+  if (!user || !profile) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <User className="h-12 w-12 animate-pulse text-blue-600 mx-auto mb-4" />
+          <p className="text-gray-600">Cargando perfil...</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleSave = async () => {
     if (!profile) return;
