@@ -21,17 +21,13 @@ const Perfil = () => {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (!user) {
-      navigate('/auth');
-      return;
-    }
     if (profile) {
       setFormData({
         nombre_completo: profile.nombre_completo || '',
         telefono: profile.telefono || '',
       });
     }
-  }, [user, profile, navigate]);
+  }, [profile]);
 
   // Show loading state if user is not loaded or profile is still loading
   if (!user || !profile) {
