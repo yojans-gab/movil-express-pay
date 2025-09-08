@@ -34,21 +34,54 @@ const Perfil = () => {
   }, [user, profile, navigate]);
 
   const handleSave = async () => {
+    if (!profile) return;
+    
+    // Input validation and sanitization
+    if (!formData.nombre_completo.trim()) {
+      toast({
+        title: "Error",
+        description: "El nombre completo es requerido.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (formData.nombre_completo.length > 100) {
+      toast({
+        title: "Error",
+        description: "El nombre es demasiado largo (máximo 100 caracteres).",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (formData.telefono && formData.telefono.length > 20) {
+      toast({
+        title: "Error",
+        description: "El teléfono es demasiado largo (máximo 20 caracteres).",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setSaving(true);
     try {
+      // SECURITY: Only allow updating specific fields, never rol
+      const updateData = {
+        nombre_completo: formData.nombre_completo.trim(),
+        telefono: formData.telefono?.trim() || null,
+      };
+      
       const { error } = await supabase
         .from('profiles')
-        .update({
-          nombre_completo: formData.nombre_completo,
-          telefono: formData.telefono,
-        })
+        .update(updateData)
         .eq('id', user.id);
 
       if (error) {
         console.error('Error updating profile:', error);
         toast({
           title: "Error",
-          description: "No se pudo actualizar el perfil",
+          description: "No se pudo actualizar el perfil. Inténtalo de nuevo.",
           variant: "destructive",
         });
         return;
@@ -66,7 +99,7 @@ const Perfil = () => {
       console.error('Error updating profile:', error);
       toast({
         title: "Error",
-        description: "No se pudo actualizar el perfil",
+        description: "Ocurrió un error inesperado.",
         variant: "destructive",
       });
     } finally {

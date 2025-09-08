@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, ShoppingCart, Package, Plus, Minus, Trash2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { saveCartToStorage, loadCartFromStorage, clearCartFromStorage } from '@/lib/cart-security';
 
 interface Producto {
   id: string;
@@ -43,11 +44,8 @@ const Carrito = () => {
 
   const loadCartFromLocalStorage = () => {
     try {
-      const savedCart = localStorage.getItem(`cart_${user?.id}`);
-      if (savedCart) {
-        const parsedCart = JSON.parse(savedCart);
-        setCartItems(parsedCart);
-      }
+      const items = loadCartFromStorage();
+      setCartItems(items);
     } catch (error) {
       console.error('Error loading cart:', error);
     } finally {
@@ -56,11 +54,7 @@ const Carrito = () => {
   };
 
   const saveCartToLocalStorage = (items: CartItem[]) => {
-    try {
-      localStorage.setItem(`cart_${user?.id}`, JSON.stringify(items));
-    } catch (error) {
-      console.error('Error saving cart:', error);
-    }
+    saveCartToStorage(items);
   };
 
   const updateQuantity = (productId: string, newQuantity: number) => {
@@ -91,7 +85,7 @@ const Carrito = () => {
 
   const clearCart = () => {
     setCartItems([]);
-    saveCartToLocalStorage([]);
+    clearCartFromStorage();
     toast({
       title: "Carrito vaciado",
       description: "Se eliminaron todos los productos del carrito",

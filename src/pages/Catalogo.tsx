@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, ShoppingCart, Package } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { saveCartToStorage, loadCartFromStorage } from '@/lib/cart-security';
 
 interface Producto {
   id: string;
@@ -69,25 +70,38 @@ const Catalogo = () => {
 
   const addToCart = (producto: Producto) => {
     try {
-      const savedCart = localStorage.getItem(`cart_${user?.id}`) || '[]';
-      const cartItems = JSON.parse(savedCart);
+      // Load existing cart items securely
+      const cartItems = loadCartFromStorage();
       
       const existingItemIndex = cartItems.findIndex((item: any) => item.producto.id === producto.id);
       
       if (existingItemIndex >= 0) {
-        // Si ya existe, incrementar cantidad
-        cartItems[existingItemIndex].cantidad += 1;
+        // Si ya existe, incrementar cantidad (respetando stock)
+        const newQuantity = Math.min(cartItems[existingItemIndex].cantidad + 1, producto.stock);
+        cartItems[existingItemIndex].cantidad = newQuantity;
+        
+        if (newQuantity === producto.stock) {
+          toast({
+            title: "Producto agregado",
+            description: `${producto.nombre} agregado (stock máximo alcanzado)`,
+          });
+        } else {
+          toast({
+            title: "Producto agregado",
+            description: `${producto.nombre} se agregó al carrito`,
+          });
+        }
       } else {
         // Si no existe, agregar nuevo item
         cartItems.push({ producto, cantidad: 1 });
+        toast({
+          title: "Producto agregado",
+          description: `${producto.nombre} se agregó al carrito`,
+        });
       }
       
-      localStorage.setItem(`cart_${user?.id}`, JSON.stringify(cartItems));
-      
-      toast({
-        title: "Producto agregado",
-        description: `${producto.nombre} se agregó al carrito`,
-      });
+      // Save securely
+      saveCartToStorage(cartItems);
     } catch (error) {
       console.error('Error adding to cart:', error);
       toast({
