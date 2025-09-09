@@ -20,6 +20,11 @@ const Perfil = () => {
   });
   const [saving, setSaving] = useState(false);
 
+  // Debug logs
+  console.log('Perfil - user:', user);
+  console.log('Perfil - profile:', profile);
+  console.log('Perfil - loading:', loading);
+
   useEffect(() => {
     if (profile) {
       setFormData({

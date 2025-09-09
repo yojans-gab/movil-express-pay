@@ -10,6 +10,11 @@ const Index = () => {
   const { user, profile, signOut, loading } = useAuth();
   const navigate = useNavigate();
 
+  // Debug logs
+  console.log('Index - user:', user);
+  console.log('Index - profile:', profile);
+  console.log('Index - loading:', loading);
+
 
   const handleSignOut = async () => {
     await signOut();
@@ -44,16 +49,25 @@ const Index = () => {
             </div>
             
             <div className="flex items-center space-x-4">
-              {profile && (
+              {/* Always show logout button if user exists */}
+              {user && (
                 <div className="flex items-center space-x-3">
-                  <div className="text-right">
-                    <p className="text-sm font-medium">{profile.nombre_completo}</p>
-                    <div className="flex items-center space-x-2">
-                      <Badge variant={profile.rol === 'operador' ? 'default' : 'secondary'}>
-                        {profile.rol === 'operador' ? 'Operador' : 'Cliente'}
-                      </Badge>
+                  {profile && (
+                    <div className="text-right">
+                      <p className="text-sm font-medium">{profile.nombre_completo}</p>
+                      <div className="flex items-center space-x-2">
+                        <Badge variant={profile.rol === 'operador' ? 'default' : 'secondary'}>
+                          {profile.rol === 'operador' ? 'Operador' : 'Cliente'}
+                        </Badge>
+                      </div>
                     </div>
-                  </div>
+                  )}
+                  {!profile && (
+                    <div className="text-right">
+                      <p className="text-sm font-medium">{user.email}</p>
+                      <p className="text-xs text-muted-foreground">Cargando perfil...</p>
+                    </div>
+                  )}
                   <Button
                     variant="outline"
                     size="sm"
