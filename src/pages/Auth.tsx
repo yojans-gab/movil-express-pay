@@ -20,7 +20,7 @@ const Auth = () => {
   // Redirect if already logged in
   useEffect(() => {
     if (user) {
-      navigate('/');
+      navigate('/dashboard');
     }
   }, [user, navigate]);
 
@@ -63,7 +63,7 @@ const Auth = () => {
         title: 'Bienvenido',
         description: 'Has iniciado sesión exitosamente',
       });
-      navigate('/');
+      navigate('/dashboard');
     }
 
     setLoading(false);
@@ -264,10 +264,10 @@ const Auth = () => {
 
             <div className="mt-6 text-center">
               <Link
-                to="/"
+                to="/dashboard"
                 className="text-sm text-muted-foreground hover:text-primary transition-colors"
               >
-                Volver al inicio
+                Volver al dashboard
               </Link>
             </div>
           </CardContent>

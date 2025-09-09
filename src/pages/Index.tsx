@@ -10,15 +10,10 @@ const Index = () => {
   const { user, profile, signOut, loading } = useAuth();
   const navigate = useNavigate();
 
-  // If not logged in, redirect to auth
-  if (!loading && !user) {
-    navigate('/auth');
-    return null;
-  }
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/auth');
+    navigate('/');
   };
 
   if (loading) {
