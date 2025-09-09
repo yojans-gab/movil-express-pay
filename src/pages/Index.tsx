@@ -56,11 +56,12 @@ const Index = () => {
                   </div>
                   <Button
                     variant="outline"
-                    size="icon"
+                    size="sm"
                     onClick={handleSignOut}
-                    className="h-9 w-9"
+                    className="flex items-center gap-2"
                   >
                     <LogOut className="h-4 w-4" />
+                    Cerrar Sesión
                   </Button>
                 </div>
               )}

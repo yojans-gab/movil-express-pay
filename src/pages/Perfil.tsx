@@ -11,7 +11,7 @@ import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
 const Perfil = () => {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, signOut, loading } = useAuth();
   const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -29,8 +29,8 @@ const Perfil = () => {
     }
   }, [profile]);
 
-  // Show loading state if user is not loaded or profile is still loading
-  if (!user || !profile) {
+  // Show loading state if still loading or if user exists but no profile
+  if (loading || (user && !profile)) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
         <div className="text-center">
@@ -39,6 +39,11 @@ const Perfil = () => {
         </div>
       </div>
     );
+  }
+
+  // If no user at all, this should be handled by ProtectedRoute
+  if (!user) {
+    return null;
   }
 
   const handleSave = async () => {
@@ -117,7 +122,7 @@ const Perfil = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate('/auth');
+    navigate('/');
   };
 
   const getRoleBadgeVariant = (role: string) => {
@@ -140,7 +145,7 @@ const Perfil = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/dashboard')}
               className="flex items-center gap-2"
             >
               <ArrowLeft className="h-4 w-4" />
