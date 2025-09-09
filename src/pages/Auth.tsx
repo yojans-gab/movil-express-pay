@@ -37,6 +37,9 @@ const Auth = () => {
     rol: 'cliente' as 'cliente' | 'operador',
   });
 
+  // Add email validation regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -53,12 +56,16 @@ const Auth = () => {
     if (error) {
       if (error.message.includes('Invalid login credentials')) {
         setError('Credenciales incorrectas. Verifica tu email y contraseña.');
+        // Clear fields on incorrect credentials
+        setLoginForm({ email: '', password: '' });
       } else if (error.message.includes('Email not confirmed')) {
         setError('Por favor confirma tu email antes de iniciar sesión.');
       } else {
         setError('Error al iniciar sesión: ' + error.message);
       }
     } else {
+      // Clear fields after successful login
+      setLoginForm({ email: '', password: '' });
       toast({
         title: 'Bienvenido',
         description: 'Has iniciado sesión exitosamente',
@@ -80,6 +87,13 @@ const Auth = () => {
       return;
     }
 
+    // Validate email format
+    if (!emailRegex.test(signupForm.email)) {
+      setError('Por favor ingresa un email válido');
+      setLoading(false);
+      return;
+    }
+
     if (signupForm.password !== signupForm.confirmPassword) {
       setError('Las contraseñas no coinciden');
       setLoading(false);
@@ -95,18 +109,30 @@ const Auth = () => {
     const { error } = await signUp(signupForm.email, signupForm.password, signupForm.nombre_completo, signupForm.rol);
 
     if (error) {
-      if (error.message.includes('User already registered')) {
+      if (error.message.includes('User already registered') || error.message.includes('already been registered')) {
         setError('Este email ya está registrado. Intenta iniciar sesión.');
       } else if (error.message.includes('Password should be at least')) {
         setError('La contraseña debe tener al menos 6 caracteres');
+      } else if (error.message.includes('Invalid email')) {
+        setError('Por favor ingresa un email válido');
       } else {
         setError('Error al registrarse: ' + error.message);
       }
     } else {
+      // Clear form fields after successful registration
+      setSignupForm({
+        email: '',
+        password: '',
+        confirmPassword: '',
+        nombre_completo: '',
+        rol: 'cliente',
+      });
+      
       toast({
         title: 'Registro exitoso',
         description: 'Revisa tu email para confirmar tu cuenta',
       });
+      
       // Switch to login tab after successful signup
       setTimeout(() => {
         const loginTab = document.querySelector('[data-value="login"]') as HTMLElement;

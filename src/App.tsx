@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import Catalogo from "./pages/Catalogo";
 import Carrito from "./pages/Carrito";
 import Perfil from "./pages/Perfil";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,7 @@ const App = () => (
                 <Perfil />
               </ProtectedRoute>
             } />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -107,11 +107,44 @@ const Carrito = () => {
     }).format(price);
   };
 
-  const handleCheckout = () => {
-    toast({
-      title: "Funcionalidad próximamente",
-      description: "El proceso de pago estará disponible pronto",
-    });
+  const handleCheckout = async () => {
+    if (!user) {
+      navigate('/auth');
+      return;
+    }
+
+    try {
+      setLoadingCart(true);
+      
+      // Create order details
+      const orderDetails = {
+        telefono: user.phone || "",
+        direccion: "Dirección por defecto", // In a real app, this would come from a form
+      };
+
+      const { data, error } = await supabase.functions.invoke('create-payment', {
+        body: {
+          cartItems,
+          orderDetails,
+        },
+      });
+
+      if (error) throw error;
+
+      if (data?.url) {
+        // Open Stripe checkout in a new tab
+        window.open(data.url, '_blank');
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      toast({
+        title: "Error en el pago",
+        description: "No se pudo procesar el pago. Inténtalo de nuevo.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingCart(false);
+    }
   };
 
   if (loading || loadingCart) {
