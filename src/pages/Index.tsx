@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Smartphone, ShoppingCart, User, LogOut, Phone, Mail } from 'lucide-react';
+import { Smartphone, ShoppingCart, User, LogOut, Phone, Mail, Settings } from 'lucide-react';
 
 const Index = () => {
   const { user, profile, signOut, loading } = useAuth();
@@ -115,23 +115,45 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          {/* Shopping Cart */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/carrito')}>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <ShoppingCart className="h-5 w-5" />
-                <span>Mi Carrito</span>
-              </CardTitle>
-              <CardDescription>
-                Revisa los productos que has seleccionado
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button variant="outline" className="w-full" onClick={(e) => { e.stopPropagation(); navigate('/carrito'); }}>
-                Ver Carrito
-              </Button>
-            </CardContent>
-          </Card>
+          {/* Shopping Cart - Solo para clientes */}
+          {profile?.rol === 'cliente' && (
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/carrito')}>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <ShoppingCart className="h-5 w-5" />
+                  <span>Mi Carrito</span>
+                </CardTitle>
+                <CardDescription>
+                  Revisa los productos que has seleccionado
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" className="w-full" onClick={(e) => { e.stopPropagation(); navigate('/carrito'); }}>
+                  Ver Carrito
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Admin Panel - Solo para operadores */}
+          {profile?.rol === 'operador' && (
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/admin')}>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Settings className="h-5 w-5" />
+                  <span>Panel de Administración</span>
+                </CardTitle>
+                <CardDescription>
+                  Gestiona productos, stock y configuraciones
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button className="w-full" onClick={(e) => { e.stopPropagation(); navigate('/admin'); }}>
+                  Administrar
+                </Button>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Profile */}
           <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => navigate('/perfil')}>

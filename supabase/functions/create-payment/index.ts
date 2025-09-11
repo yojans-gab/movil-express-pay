@@ -50,33 +50,6 @@ serve(async (req) => {
       customerId = customers.data[0].id;
     }
 
-    // Create line items for Stripe
-    const lineItems = cartItems.map((item: any) => ({
-      price_data: {
-        currency: "gtq",
-        product_data: { 
-          name: `${item.producto.marca} ${item.producto.nombre}`,
-          description: item.producto.descripcion || undefined,
-        },
-        unit_amount: Math.round(item.producto.precio * 100), // Convert to cents
-      },
-      quantity: item.cantidad,
-    }));
-
-    // Create a one-time payment session
-    const session = await stripe.checkout.sessions.create({
-      customer: customerId,
-      customer_email: customerId ? undefined : user.email,
-      line_items: lineItems,
-      mode: "payment",
-      success_url: `${req.headers.get("origin")}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.get("origin")}/carrito`,
-      metadata: {
-        user_id: user.id,
-        total_amount: totalAmount.toString(),
-      },
-    });
-
     // Create order in database using service role
     const supabaseService = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
@@ -112,6 +85,34 @@ serve(async (req) => {
       .insert(orderItems);
 
     if (itemsError) throw new Error(`Error creating order items: ${itemsError.message}`);
+
+    // Create line items for Stripe
+    const lineItems = cartItems.map((item: any) => ({
+      price_data: {
+        currency: "gtq",
+        product_data: { 
+          name: `${item.producto.marca} ${item.producto.nombre}`,
+          description: item.producto.descripcion || undefined,
+        },
+        unit_amount: Math.round(item.producto.precio * 100), // Convert to cents
+      },
+      quantity: item.cantidad,
+    }));
+
+    // Create a one-time payment session
+    const session = await stripe.checkout.sessions.create({
+      customer: customerId,
+      customer_email: customerId ? undefined : user.email,
+      line_items: lineItems,
+      mode: "payment",
+      success_url: `${req.headers.get("origin")}/payment-success?orden_id=${orderData.id}&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${req.headers.get("origin")}/carrito`,
+      metadata: {
+        user_id: user.id,
+        total_amount: totalAmount.toString(),
+        orden_id: orderData.id,
+      },
+    });
 
     return new Response(JSON.stringify({ 
       url: session.url,

@@ -12,6 +12,7 @@ import Catalogo from "./pages/Catalogo";
 import Carrito from "./pages/Carrito";
 import Perfil from "./pages/Perfil";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import AdminPanel from "./pages/AdminPanel";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,11 @@ const App = () => (
               </ProtectedRoute>
             } />
             <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/admin" element={
+              <ProtectedRoute>
+                <AdminPanel />
+              </ProtectedRoute>
+            } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

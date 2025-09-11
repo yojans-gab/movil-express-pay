@@ -9,6 +9,7 @@ const PaymentSuccess = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get('session_id');
+  const ordenId = searchParams.get('orden_id');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -42,14 +43,23 @@ const PaymentSuccess = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="text-center text-sm text-gray-600">
-            {sessionId && (
+            {ordenId && (
               <p className="mb-4">
-                ID de sesión: <code className="bg-gray-100 px-2 py-1 rounded text-xs">{sessionId}</code>
+                Número de orden: <code className="bg-gray-100 px-2 py-1 rounded text-xs">{ordenId}</code>
               </p>
             )}
             <p>
-              Recibirás un email de confirmación con los detalles de tu compra.
+              Tu carrito ha sido vaciado y el stock se ha actualizado automáticamente.
             </p>
+          </div>
+          
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <h4 className="font-semibold text-green-900 mb-2">¿Qué sigue?</h4>
+            <ul className="text-sm text-green-700 space-y-1">
+              <li>• Tu orden está siendo procesada</li>
+              <li>• El stock de los productos se actualizó</li>
+              <li>• Puedes seguir comprando</li>
+            </ul>
           </div>
           
           <div className="space-y-2">
