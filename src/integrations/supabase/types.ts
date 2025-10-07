@@ -14,7 +14,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      clientes: {
+      cliente: {
         Row: {
           created_at: string
           direccion: string | null
@@ -44,15 +44,15 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "clientes_usuario_id_fkey"
+            foreignKeyName: "cliente_usuario_id_fkey"
             columns: ["usuario_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "profile"
             referencedColumns: ["id"]
           },
         ]
       }
-      comercios: {
+      comercio: {
         Row: {
           banco_comercio_id: number | null
           created_at: string
@@ -79,7 +79,7 @@ export type Database = {
         }
         Relationships: []
       }
-      orden_items: {
+      orden_item: {
         Row: {
           cantidad: number
           created_at: string
@@ -112,22 +112,22 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "orden_items_orden_id_fkey"
+            foreignKeyName: "orden_item_orden_id_fkey"
             columns: ["orden_id"]
             isOneToOne: false
-            referencedRelation: "ordenes"
+            referencedRelation: "orden"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "orden_items_producto_id_fkey"
+            foreignKeyName: "orden_item_producto_id_fkey"
             columns: ["producto_id"]
             isOneToOne: false
-            referencedRelation: "productos"
+            referencedRelation: "producto"
             referencedColumns: ["id"]
           },
         ]
       }
-      ordenes: {
+      orden: {
         Row: {
           created_at: string
           direccion_envio: string
@@ -163,15 +163,15 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "ordenes_usuario_id_fkey"
+            foreignKeyName: "orden_usuario_id_fkey"
             columns: ["usuario_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "profile"
             referencedColumns: ["id"]
           },
         ]
       }
-      pagos: {
+      pago: {
         Row: {
           banco_pago_id: string | null
           comercio_id: string
@@ -210,22 +210,22 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "pagos_comercio_id_fkey"
+            foreignKeyName: "pago_comercio_id_fkey"
             columns: ["comercio_id"]
             isOneToOne: false
-            referencedRelation: "comercios"
+            referencedRelation: "comercio"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "pagos_orden_id_fkey"
+            foreignKeyName: "pago_orden_id_fkey"
             columns: ["orden_id"]
             isOneToOne: false
-            referencedRelation: "ordenes"
+            referencedRelation: "orden"
             referencedColumns: ["id"]
           },
         ]
       }
-      pagos_webhook_logs: {
+      pago_webhook_log: {
         Row: {
           created_at: string
           headers: Json | null
@@ -252,15 +252,15 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "pagos_webhook_logs_pago_id_fkey"
+            foreignKeyName: "pago_webhook_log_pago_id_fkey"
             columns: ["pago_id"]
             isOneToOne: false
-            referencedRelation: "pagos"
+            referencedRelation: "pago"
             referencedColumns: ["id"]
           },
         ]
       }
-      productos: {
+      producto: {
         Row: {
           codigo: string
           created_at: string
@@ -305,7 +305,7 @@ export type Database = {
         }
         Relationships: []
       }
-      profiles: {
+      profile: {
         Row: {
           correo_electronico: string
           created_at: string
@@ -335,7 +335,7 @@ export type Database = {
         }
         Relationships: []
       }
-      usuarios: {
+      usuario: {
         Row: {
           correo_electronico: string
           fecha_creacion: string
