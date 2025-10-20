@@ -58,7 +58,7 @@ serve(async (req) => {
     );
 
     const { data: orderData, error: orderError } = await supabaseService
-      .from("ordenes")
+      .from("orden")
       .insert({
         usuario_id: user.id,
         total: totalAmount,
@@ -81,7 +81,7 @@ serve(async (req) => {
     }));
 
     const { error: itemsError } = await supabaseService
-      .from("orden_items")
+      .from("orden_item")
       .insert(orderItems);
 
     if (itemsError) throw new Error(`Error creating order items: ${itemsError.message}`);

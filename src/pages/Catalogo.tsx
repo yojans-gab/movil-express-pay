@@ -38,7 +38,7 @@ const Catalogo = () => {
   const fetchProductos = async () => {
     try {
       const { data, error } = await supabase
-        .from('productos')
+        .from('producto')
         .select('*')
         .eq('estado', 'activo')
         .order('nombre');

@@ -62,7 +62,7 @@ const AdminPanel = () => {
   const fetchProductos = async () => {
     try {
       const { data, error } = await supabase
-        .from('productos')
+        .from('producto')
         .select('*')
         .order('nombre');
 
@@ -141,7 +141,7 @@ const AdminPanel = () => {
       if (editingProduct) {
         // Actualizar producto existente
         const { error } = await supabase
-          .from('productos')
+          .from('producto')
           .update(productData)
           .eq('id', editingProduct.id);
 
@@ -154,7 +154,7 @@ const AdminPanel = () => {
       } else {
         // Crear nuevo producto
         const { error } = await supabase
-          .from('productos')
+          .from('producto')
           .insert([productData]);
 
         if (error) throw error;
@@ -183,7 +183,7 @@ const AdminPanel = () => {
     
     try {
       const { error } = await supabase
-        .from('productos')
+        .from('producto')
         .update({ estado: newStatus })
         .eq('id', producto.id);
 

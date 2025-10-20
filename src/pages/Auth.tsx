@@ -287,15 +287,6 @@ const Auth = () => {
                 </form>
               </TabsContent>
             </Tabs>
-
-            <div className="mt-6 text-center">
-              <Link
-                to="/dashboard"
-                className="text-sm text-muted-foreground hover:text-primary transition-colors"
-              >
-                Volver al dashboard
-              </Link>
-            </div>
           </CardContent>
         </Card>
       </div>
