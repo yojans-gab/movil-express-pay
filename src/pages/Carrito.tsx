@@ -4,12 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { ArrowLeft, ShoppingCart, Package, Plus, Minus, Trash2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { saveCartToStorage, loadCartFromStorage, clearCartFromStorage } from '@/lib/cart-security';
+import BankSelector from '@/components/BankSelector';
 
 interface Producto {
   id: string;
@@ -28,7 +26,7 @@ interface CartItem {
 }
 
 const Carrito = () => {
-  const { user, loading } = useAuth();
+  const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [loadingCart, setLoadingCart] = useState(true);
@@ -107,8 +105,8 @@ const Carrito = () => {
     }).format(price);
   };
 
-  const handleCheckout = async () => {
-    if (!user) {
+  const handleCheckout = async (bankName: string) => {
+    if (!user || !profile) {
       navigate('/auth');
       return;
     }
@@ -116,30 +114,35 @@ const Carrito = () => {
     try {
       setLoadingCart(true);
       
-      // Create order details
       const orderDetails = {
-        telefono: user.phone || "",
-        direccion: "Dirección por defecto", // In a real app, this would come from a form
+        telefono: profile.telefono || "No especificado",
+        direccion_envio: "Dirección de envío (ejemplo)",
       };
 
       const { data, error } = await supabase.functions.invoke('create-payment', {
         body: {
           cartItems,
           orderDetails,
+          bankName,
         },
       });
 
       if (error) throw error;
-
-      if (data?.url) {
-        // Open Stripe checkout in a new tab
-        window.open(data.url, '_blank');
+      
+      if (data?.paymentUrl) {
+        toast({
+          title: "Redirigiendo al banco...",
+          description: `Serás redirigido a la pasarela de pago de ${bankName}.`
+        });
+        window.location.href = data.paymentUrl;
+      } else {
+         throw new Error("No se recibió una URL de pago.");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Payment error:', error);
       toast({
         title: "Error en el pago",
-        description: "No se pudo procesar el pago. Inténtalo de nuevo.",
+        description: error.message || "No se pudo iniciar el proceso de pago. Inténtalo de nuevo.",
         variant: "destructive",
       });
     } finally {
@@ -161,7 +164,6 @@ const Carrito = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <Button
@@ -182,8 +184,6 @@ const Carrito = () => {
             </Button>
           )}
         </div>
-
-        {/* Cart Content */}
         {cartItems.length === 0 ? (
           <Card className="max-w-2xl mx-auto">
             <CardHeader className="text-center">
@@ -206,7 +206,6 @@ const Carrito = () => {
           </Card>
         ) : (
           <div className="grid lg:grid-cols-3 gap-8">
-            {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
               {cartItems.map((item) => (
                 <Card key={item.producto.id}>
@@ -263,8 +262,6 @@ const Carrito = () => {
                 </Card>
               ))}
             </div>
-
-            {/* Order Summary */}
             <div className="lg:col-span-1">
               <Card className="sticky top-8">
                 <CardHeader>
@@ -282,13 +279,11 @@ const Carrito = () => {
                   </div>
                   
                   <div className="pt-4 border-t">
-                    <Button 
+                    <BankSelector
+                      onBankSelect={handleCheckout}
                       className="w-full"
-                      onClick={handleCheckout}
-                      disabled={cartItems.length === 0}
-                    >
-                      Proceder al Pago
-                    </Button>
+                      triggerText="Proceder al Pago"
+                    />
                   </div>
                   
                   <Button 
