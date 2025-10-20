@@ -13,6 +13,7 @@ import Carrito from "./pages/Carrito";
 import Perfil from "./pages/Perfil";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import AdminPanel from "./pages/AdminPanel";
+import BancoTikalCheckout from "./pages/BancoTikalCheckout";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +47,11 @@ const App = () => (
               </ProtectedRoute>
             } />
             <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/banco-tikal-checkout" element={
+              <ProtectedRoute>
+                <BancoTikalCheckout />
+              </ProtectedRoute>
+            } />
             <Route path="/admin" element={
               <ProtectedRoute>
                 <AdminPanel />

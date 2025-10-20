@@ -91,7 +91,7 @@ const Perfil = () => {
       };
       
       const { error } = await supabase
-        .from('profile')
+        .from('profile' as any)
         .update(updateData)
         .eq('id', user.id);
 

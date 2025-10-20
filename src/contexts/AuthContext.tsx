@@ -45,7 +45,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const fetchProfile = async (userId: string) => {
     try {
       const { data, error } = await supabase
-        .from('profile')
+        .from('profile' as any)
         .select('*')
         .eq('id', userId)
         .maybeSingle();
@@ -56,7 +56,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
 
       if (data) {
-        setProfile(data);
+        setProfile(data as any);
       }
     } catch (error) {
       console.error('Error fetching profile:', error);

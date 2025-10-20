@@ -61,10 +61,10 @@ const AdminPanel = () => {
 
   const fetchProductos = async () => {
     try {
-      const { data, error } = await supabase
-        .from('producto')
-        .select('*')
-        .order('nombre');
+    const { data, error } = await supabase
+      .from('producto' as any)
+      .select('*')
+      .order('nombre');
 
       if (error) {
         console.error('Error fetching productos:', error);
@@ -76,7 +76,7 @@ const AdminPanel = () => {
         return;
       }
 
-      setProductos(data || []);
+      setProductos((data as any) || []);
     } catch (error) {
       console.error('Error fetching productos:', error);
     } finally {
@@ -141,7 +141,7 @@ const AdminPanel = () => {
       if (editingProduct) {
         // Actualizar producto existente
         const { error } = await supabase
-          .from('producto')
+          .from('producto' as any)
           .update(productData)
           .eq('id', editingProduct.id);
 
@@ -154,7 +154,7 @@ const AdminPanel = () => {
       } else {
         // Crear nuevo producto
         const { error } = await supabase
-          .from('producto')
+          .from('producto' as any)
           .insert([productData]);
 
         if (error) throw error;
@@ -183,7 +183,7 @@ const AdminPanel = () => {
     
     try {
       const { error } = await supabase
-        .from('producto')
+        .from('producto' as any)
         .update({ estado: newStatus })
         .eq('id', producto.id);
 

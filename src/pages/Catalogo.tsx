@@ -37,11 +37,11 @@ const Catalogo = () => {
 
   const fetchProductos = async () => {
     try {
-      const { data, error } = await supabase
-        .from('producto')
-        .select('*')
-        .eq('estado', 'activo')
-        .order('nombre');
+    const { data, error } = await supabase
+      .from('producto' as any)
+      .select('*')
+      .eq('estado', 'activo')
+      .order('nombre');
 
       if (error) {
         console.error('Error fetching productos:', error);
@@ -53,7 +53,7 @@ const Catalogo = () => {
         return;
       }
 
-      setProductos(data || []);
+      setProductos((data as any) || []);
     } catch (error) {
       console.error('Error fetching productos:', error);
     } finally {
