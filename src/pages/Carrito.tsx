@@ -121,26 +121,31 @@ const Carrito = () => {
 
       const totalAmount = getTotalPrice();
 
-      // Si es Banco Tikal, usar su widget
+      // Si es Banco Tikal, navegar a su checkout
       if (bankName === 'Banco Tikal') {
-        const { data, error } = await supabase.functions.invoke('create-banco-tikal-order', {
-          body: {
+        navigate('/banco-tikal-checkout', {
+          state: {
             cartItems,
             orderDetails,
             totalAmount,
           },
         });
-
-        if (error) throw error;
-        
-        if (data?.ordenId) {
-          // Redirigir a la página del checkout de Banco Tikal
-          navigate(`/banco-tikal-checkout?orden_id=${data.ordenId}&amount=${totalAmount}`);
-          return;
-        }
+        return;
       }
 
-      // Para otros bancos (Kabzin, Stripe, etc.)
+      // Si es Banco Kabzin, navegar a su checkout con BATZIR
+      if (bankName === 'Banco Kabzin') {
+        navigate('/banco-kabzin-checkout', {
+          state: {
+            cartItems,
+            orderDetails,
+            totalAmount,
+          },
+        });
+        return;
+      }
+
+      // Para otros bancos (Stripe, etc.)
       const { data, error } = await supabase.functions.invoke('create-payment', {
         body: {
           cartItems,

@@ -12,8 +12,10 @@ import Catalogo from "./pages/Catalogo";
 import Carrito from "./pages/Carrito";
 import Perfil from "./pages/Perfil";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentCancel from "./pages/PaymentCancel";
 import AdminPanel from "./pages/AdminPanel";
 import BancoTikalCheckout from "./pages/BancoTikalCheckout";
+import BancoKabzinCheckout from "./pages/BancoKabzinCheckout";
 
 const queryClient = new QueryClient();
 
@@ -47,9 +49,15 @@ const App = () => (
               </ProtectedRoute>
             } />
             <Route path="/payment-success" element={<PaymentSuccess />} />
+            <Route path="/payment-cancel" element={<PaymentCancel />} />
             <Route path="/banco-tikal-checkout" element={
               <ProtectedRoute>
                 <BancoTikalCheckout />
+              </ProtectedRoute>
+            } />
+            <Route path="/banco-kabzin-checkout" element={
+              <ProtectedRoute>
+                <BancoKabzinCheckout />
               </ProtectedRoute>
             } />
             <Route path="/admin" element={

@@ -5,3 +5,6 @@ verify_jwt = true
 
 [functions.create-banco-tikal-order]
 verify_jwt = true
+
+[functions.create-banco-kabzin-order]
+verify_jwt = true
