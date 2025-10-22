@@ -121,15 +121,25 @@ const Carrito = () => {
 
       const totalAmount = getTotalPrice();
 
-      // Si es Banco Tikal, navegar a su checkout
+      // Si es Banco Tikal, crear orden y navegar a su checkout
       if (bankName === 'Banco Tikal') {
-        navigate('/banco-tikal-checkout', {
-          state: {
+        const { data, error } = await supabase.functions.invoke('create-banco-tikal-order', {
+          body: {
             cartItems,
             orderDetails,
             totalAmount,
           },
         });
+
+        if (error) {
+          console.error('Error creating Banco Tikal order:', error);
+          throw error;
+        }
+
+        console.log('Banco Tikal order created:', data);
+        
+        // Navegar al checkout con query params
+        navigate(`/banco-tikal-checkout?orden_id=${data.ordenId}&amount=${data.totalAmount}`);
         return;
       }
 
