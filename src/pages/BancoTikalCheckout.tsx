@@ -65,7 +65,7 @@ const BancoTikalCheckout = () => {
 
     try {
       window.BancoTikalWidget.init({
-        merchantId: 2000, // ID del comercio en Banco Tikal
+        merchantId: 2006, // ID del comercio en Banco Tikal
         amount: amount,
         currency: 'GTQ',
         
