@@ -41,8 +41,8 @@ const BankSelector: React.FC<BankSelectorProps> = ({
       icon: Building2,
     },
     {
-      name: 'Banco Batzir',
-      description: 'Procesamiento seguro con Banco Batzir',
+      name: 'Banco Kabzin',
+      description: 'Procesamiento seguro con Banco Kabzin',
       icon: CreditCard,
     },
   ];
