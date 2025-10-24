@@ -54,11 +54,11 @@ serve(async (req) => {
       throw new Error("Unauthorized");
     }
 
-    // Update payment status to SUCCESS
+    // Update payment status to APROBADO
     const { error: updateError } = await supabaseService
       .from("pago")
       .update({
-        estado: "SUCCESS",
+        estado: "APROBADO",
         banco_pago_id: bancoTransactionId || null,
         updated_at: new Date().toISOString(),
       })
