@@ -82,9 +82,45 @@ serve(async (req) => {
 
     console.log("Order items created successfully");
 
-    // Return order ID for the checkout page
+    // Get Banco Tikal comercio (merchantId 2006)
+    const { data: comercioData, error: comercioError } = await supabaseService
+      .from("comercio")
+      .select("id")
+      .eq("banco_comercio_id", 2006)
+      .single();
+
+    if (comercioError || !comercioData) {
+      console.error("Comercio lookup error:", comercioError);
+      throw new Error("No se encontró el comercio configurado para Banco Tikal");
+    }
+
+    // Create payment record with PENDING status
+    const idempotencyKey = `tikal-${orderData.id}-${Date.now()}`;
+    
+    const { data: pagoData, error: pagoError } = await supabaseService
+      .from("pago")
+      .insert({
+        orden_id: orderData.id,
+        comercio_id: comercioData.id,
+        monto: totalAmount,
+        estado: "PENDING",
+        idempotency_key: idempotencyKey,
+        referencia: `Orden ${orderData.id}`,
+      })
+      .select()
+      .single();
+
+    if (pagoError) {
+      console.error("Payment creation error:", pagoError);
+      throw new Error(`Error al crear el registro de pago: ${pagoError.message}`);
+    }
+
+    console.log("Payment record created:", pagoData.id);
+
+    // Return order and payment IDs for the checkout page
     return new Response(JSON.stringify({ 
       ordenId: orderData.id,
+      pagoId: pagoData.id,
       totalAmount: totalAmount
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

@@ -139,7 +139,7 @@ const Carrito = () => {
         console.log('Banco Tikal order created:', data);
         
         // Navegar al checkout con query params
-        navigate(`/banco-tikal-checkout?orden_id=${data.ordenId}&amount=${data.totalAmount}`);
+        navigate(`/banco-tikal-checkout?orden_id=${data.ordenId}&pago_id=${data.pagoId}&amount=${data.totalAmount}`);
         return;
       }
 

@@ -3,6 +3,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { supabase } from '@/integrations/supabase/client';
+import { clearCartFromStorage } from '@/lib/cart-security';
 
 declare global {
   interface Window {
@@ -25,10 +27,11 @@ const BancoTikalCheckout = () => {
   const [widgetLoaded, setWidgetLoaded] = useState(false);
 
   const ordenId = searchParams.get('orden_id');
+  const pagoId = searchParams.get('pago_id');
   const amount = parseFloat(searchParams.get('amount') || '0');
 
   useEffect(() => {
-    if (!ordenId || !amount) {
+    if (!ordenId || !pagoId || !amount) {
       navigate('/carrito');
       return;
     }
@@ -72,12 +75,36 @@ const BancoTikalCheckout = () => {
         onSuccess: async (paymentData) => {
           console.log('✅ Pago exitoso:', paymentData);
           
-          if (paymentData.transactionId) {
-            // Pago con tarjeta completado
-            navigate(`/payment-success?orden_id=${ordenId}&transaction_id=${paymentData.transactionId}`);
-          } else if (paymentData.codigoOrden) {
-            // Orden de pago generada (pago en efectivo o transferencia)
-            navigate(`/payment-success?orden_id=${ordenId}&codigo_orden=${paymentData.codigoOrden}&clave_acceso=${paymentData.claveAcceso}`);
+          try {
+            // Confirm payment in backend
+            const { error } = await supabase.functions.invoke('confirm-banco-tikal-payment', {
+              body: {
+                pagoId: pagoId,
+                bancoTransactionId: paymentData?.transactionId || paymentData?.id || null,
+              },
+            });
+
+            if (error) {
+              console.error('Error confirming payment:', error);
+              throw error;
+            }
+
+            // Clear cart and navigate to success page
+            clearCartFromStorage();
+            
+            if (paymentData.transactionId) {
+              // Pago con tarjeta completado
+              navigate(`/payment-success?orden_id=${ordenId}&transaction_id=${paymentData.transactionId}`);
+            } else if (paymentData.codigoOrden) {
+              // Orden de pago generada (pago en efectivo o transferencia)
+              navigate(`/payment-success?orden_id=${ordenId}&codigo_orden=${paymentData.codigoOrden}&clave_acceso=${paymentData.claveAcceso}`);
+            } else {
+              navigate(`/payment-success?orden_id=${ordenId}`);
+            }
+          } catch (error) {
+            console.error('Payment confirmation failed:', error);
+            alert('El pago fue procesado pero hubo un error al confirmar. Por favor contacta a soporte.');
+            navigate('/carrito');
           }
         },
         
