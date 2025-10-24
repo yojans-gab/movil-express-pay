@@ -14,7 +14,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      clientes: {
+      cliente: {
         Row: {
           created_at: string
           direccion: string | null
@@ -47,12 +47,12 @@ export type Database = {
             foreignKeyName: "clientes_usuario_id_fkey"
             columns: ["usuario_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "profile"
             referencedColumns: ["id"]
           },
         ]
       }
-      comercios: {
+      comercio: {
         Row: {
           banco_comercio_id: number | null
           created_at: string
@@ -79,55 +79,7 @@ export type Database = {
         }
         Relationships: []
       }
-      orden_items: {
-        Row: {
-          cantidad: number
-          created_at: string
-          id: string
-          orden_id: string
-          precio_unitario: number
-          producto_id: string
-          subtotal: number
-          updated_at: string
-        }
-        Insert: {
-          cantidad: number
-          created_at?: string
-          id?: string
-          orden_id: string
-          precio_unitario: number
-          producto_id: string
-          subtotal: number
-          updated_at?: string
-        }
-        Update: {
-          cantidad?: number
-          created_at?: string
-          id?: string
-          orden_id?: string
-          precio_unitario?: number
-          producto_id?: string
-          subtotal?: number
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "orden_items_orden_id_fkey"
-            columns: ["orden_id"]
-            isOneToOne: false
-            referencedRelation: "ordenes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "orden_items_producto_id_fkey"
-            columns: ["producto_id"]
-            isOneToOne: false
-            referencedRelation: "productos"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      ordenes: {
+      orden: {
         Row: {
           created_at: string
           direccion_envio: string
@@ -166,12 +118,60 @@ export type Database = {
             foreignKeyName: "ordenes_usuario_id_fkey"
             columns: ["usuario_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "profile"
             referencedColumns: ["id"]
           },
         ]
       }
-      pagos: {
+      orden_item: {
+        Row: {
+          cantidad: number
+          created_at: string
+          id: string
+          orden_id: string
+          precio_unitario: number
+          producto_id: string
+          subtotal: number
+          updated_at: string
+        }
+        Insert: {
+          cantidad: number
+          created_at?: string
+          id?: string
+          orden_id: string
+          precio_unitario: number
+          producto_id: string
+          subtotal: number
+          updated_at?: string
+        }
+        Update: {
+          cantidad?: number
+          created_at?: string
+          id?: string
+          orden_id?: string
+          precio_unitario?: number
+          producto_id?: string
+          subtotal?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orden_items_orden_id_fkey"
+            columns: ["orden_id"]
+            isOneToOne: false
+            referencedRelation: "orden"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orden_items_producto_id_fkey"
+            columns: ["producto_id"]
+            isOneToOne: false
+            referencedRelation: "producto"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pago: {
         Row: {
           banco_pago_id: string | null
           comercio_id: string
@@ -213,19 +213,19 @@ export type Database = {
             foreignKeyName: "pagos_comercio_id_fkey"
             columns: ["comercio_id"]
             isOneToOne: false
-            referencedRelation: "comercios"
+            referencedRelation: "comercio"
             referencedColumns: ["id"]
           },
           {
             foreignKeyName: "pagos_orden_id_fkey"
             columns: ["orden_id"]
             isOneToOne: false
-            referencedRelation: "ordenes"
+            referencedRelation: "orden"
             referencedColumns: ["id"]
           },
         ]
       }
-      pagos_webhook_logs: {
+      pago_webhook_log: {
         Row: {
           created_at: string
           headers: Json | null
@@ -255,12 +255,12 @@ export type Database = {
             foreignKeyName: "pagos_webhook_logs_pago_id_fkey"
             columns: ["pago_id"]
             isOneToOne: false
-            referencedRelation: "pagos"
+            referencedRelation: "pago"
             referencedColumns: ["id"]
           },
         ]
       }
-      productos: {
+      producto: {
         Row: {
           codigo: string
           created_at: string
@@ -274,6 +274,7 @@ export type Database = {
           precio: number
           stock: number
           updated_at: string
+          version: number | null
         }
         Insert: {
           codigo: string
@@ -288,6 +289,7 @@ export type Database = {
           precio: number
           stock?: number
           updated_at?: string
+          version?: number | null
         }
         Update: {
           codigo?: string
@@ -302,10 +304,11 @@ export type Database = {
           precio?: number
           stock?: number
           updated_at?: string
+          version?: number | null
         }
         Relationships: []
       }
-      profiles: {
+      profile: {
         Row: {
           correo_electronico: string
           created_at: string
@@ -335,7 +338,45 @@ export type Database = {
         }
         Relationships: []
       }
-      usuarios: {
+      stock_adjustment: {
+        Row: {
+          cantidad: number
+          created_at: string
+          id: string
+          nota: string | null
+          orden_id: string
+          pago_id: string
+          producto_id: string
+        }
+        Insert: {
+          cantidad: number
+          created_at?: string
+          id?: string
+          nota?: string | null
+          orden_id: string
+          pago_id: string
+          producto_id: string
+        }
+        Update: {
+          cantidad?: number
+          created_at?: string
+          id?: string
+          nota?: string | null
+          orden_id?: string
+          pago_id?: string
+          producto_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_adjustment_producto_id_fkey"
+            columns: ["producto_id"]
+            isOneToOne: false
+            referencedRelation: "producto"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      usuario: {
         Row: {
           correo_electronico: string
           fecha_creacion: string
@@ -374,14 +415,12 @@ export type Database = {
         Args: { p_pago_id: string }
         Returns: boolean
       }
-      is_operador: {
-        Args: { user_id: string }
-        Returns: boolean
+      fn_apply_stock_for_payment: {
+        Args: { p_orden_id: string; p_pago_id: string }
+        Returns: undefined
       }
-      revertir_stock_orden: {
-        Args: { p_orden_id: string }
-        Returns: boolean
-      }
+      is_operador: { Args: { user_id: string }; Returns: boolean }
+      revertir_stock_orden: { Args: { p_orden_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "cliente" | "operador"
