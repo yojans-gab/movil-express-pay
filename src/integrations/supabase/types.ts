@@ -14,7 +14,7 @@ export type Database = {
   }
   public: {
     Tables: {
-      cliente: {
+      "cliente-backup": {
         Row: {
           created_at: string
           direccion: string | null
@@ -375,36 +375,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      usuario: {
-        Row: {
-          correo_electronico: string
-          fecha_creacion: string
-          id: string
-          nombre_completo: string
-          password_hash: string | null
-          rol: Database["public"]["Enums"]["app_role"]
-          telefono: string | null
-        }
-        Insert: {
-          correo_electronico: string
-          fecha_creacion?: string
-          id?: string
-          nombre_completo: string
-          password_hash?: string | null
-          rol?: Database["public"]["Enums"]["app_role"]
-          telefono?: string | null
-        }
-        Update: {
-          correo_electronico?: string
-          fecha_creacion?: string
-          id?: string
-          nombre_completo?: string
-          password_hash?: string | null
-          rol?: Database["public"]["Enums"]["app_role"]
-          telefono?: string | null
-        }
-        Relationships: []
       }
     }
     Views: {
